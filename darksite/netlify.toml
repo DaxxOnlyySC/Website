@@ -1,0 +1,25 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/ff?path=/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/rb/profile"
+  to = "/.netlify/functions/rbx"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/dl/lua"
+  to = "/.netlify/functions/dl"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
