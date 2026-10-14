@@ -137,6 +137,31 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 .banner.bad{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.4);color:#fca5a5}
 .banner .big{font-size:1.3rem;font-weight:800;display:block;margin-bottom:6px}
 
+/* ===== DURATION OPTIONS (ban) ===== */
+.dur-options{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.dur-opt{position:relative;cursor:pointer}
+.dur-opt input{position:absolute;opacity:0;pointer-events:none}
+.dur-opt span{display:inline-block;padding:11px 22px;border-radius:12px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(0,0,0,.4);color:#cbd5e1;font-size:.9rem;font-weight:600;letter-spacing:1px;transition:all .25s}
+.dur-opt:hover span{border-color:#ef4444;color:#fff}
+.dur-opt input:checked + span{background:rgba(239,68,68,.2);border-color:#ef4444;color:#fff;box-shadow:0 0 18px rgba(239,68,68,.4)}
+.dur-opt .loop-tag{display:block;font-size:.62rem;color:#94a3b8;font-weight:400;margin-top:3px;letter-spacing:.5px}
+.dur-opt input:checked + span .loop-tag{color:#fca5a5}
+
+/* ===== ACTIVE BAN LOOPS ===== */
+.active-bans{display:none;margin-top:28px}
+.active-bans.show{display:block}
+.active-bans h4{font-size:.8rem;color:#fca5a5;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+.ab-list{display:flex;flex-direction:column;gap:10px}
+.ab-item{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.25);border-radius:12px;padding:12px 16px;
+  animation:fadeUp .3s ease both}
+.ab-uid{font-weight:700;color:#fff;letter-spacing:1px;font-size:1rem}
+.ab-meta{font-size:.78rem;color:#94a3b8;margin-top:2px}
+.ab-stop{background:transparent;border:1px solid rgba(239,68,68,.5);color:#fca5a5;padding:6px 16px;border-radius:8px;
+  cursor:pointer;font-size:.75rem;font-weight:700;letter-spacing:1px;transition:all .25s}
+.ab-stop:hover{background:rgba(239,68,68,.2);color:#fff}
+
 /* ===== ARTICLE ===== */
 .article h3{color:#a855f7;font-size:1.15rem;margin:28px 0 10px;letter-spacing:.5px}
 .article h3:first-child{margin-top:0}
@@ -254,13 +279,19 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
   <div class="card danger" style="max-width:720px;margin:0 auto">
     <span class="kicker danger">MINI WORLD · DANGER</span>
     <h2>🚫 Ban Player Device</h2>
-    <p class="desc">Kirim request ban device ke UID target. Satu request mem-ban device selama <strong>~3 menit</strong>. Untuk durasi lebih lama, ulangi secara berkala (lihat bot Discord).</p>
+    <p class="desc">Kirim request ban device ke UID target. Pilih durasi — <strong>2 Jam</strong> / <strong>1 Hari</strong> akan diulang otomatis tiap 3 menit (sama seperti ban di bot Discord).</p>
 
     <div class="form-row">
       <input type="text" id="mwBanUid" placeholder="Contoh: 1320454366" maxlength="12" onkeypress="if(event.key==='Enter')mwBan()">
       <button id="btnMwBan" class="danger" onclick="mwBan()">BAN DEVICE</button>
     </div>
-    <p class="hint">⚠️ Klik sekali untuk menyiapkan, klik lagi untuk konfirmasi. Tindakan ini langsung dieksekusi.</p>
+
+    <div class="dur-options">
+      <label class="dur-opt"><input type="radio" name="mwdur" value="180" checked><span>⚡ 3 Menit<span class="loop-tag">Sekali kirim</span></span></label>
+      <label class="dur-opt"><input type="radio" name="mwdur" value="7200"><span>🕒 2 Jam<span class="loop-tag">Loop tiap 3 menit</span></span></label>
+      <label class="dur-opt"><input type="radio" name="mwdur" value="86400"><span>📅 1 Hari<span class="loop-tag">Loop tiap 3 menit</span></span></label>
+    </div>
+    <p class="hint">⚠️ Klik BAN sekali untuk menyiapkan, klik lagi untuk konfirmasi. Durasi loop (2 Jam / 1 Hari) jalan selama tab ini terbuka.</p>
 
     <div id="mwBanLoading" class="loading">
       <div class="spinner"></div>
@@ -269,6 +300,11 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 
     <div id="mwBanError" class="error"></div>
     <div id="mwBanResult" class="banner"></div>
+
+    <div id="mwActiveBans" class="active-bans">
+      <h4>🔴 Ban Loop Aktif</h4>
+      <div id="mwAbList" class="ab-list"></div>
+    </div>
   </div>
 </div>
 
@@ -553,22 +589,36 @@ async function mwRoom(){
   document.getElementById('btnMwRoom').disabled=false;
 }
 
-/* ===== MINI WORLD BAN DEVICE (two-step confirm) ===== */
+/* ===== MINI WORLD BAN DEVICE (duration + 3-min loop, mirrors Discord bot) ===== */
+const MW_REPEAT_MS = 180000; // 3 minutes
+const MW_BANS_KEY = 'mw_active_bans';
+
+function loadBans(){ try{ return JSON.parse(localStorage.getItem(MW_BANS_KEY))||{}; }catch(_){ return {}; } }
+function saveBans(b){ try{ localStorage.setItem(MW_BANS_KEY, JSON.stringify(b)); }catch(_){} }
+function putBan(uid,data){ const b=loadBans(); b[uid]=Object.assign({},b[uid]||{},data,{uid}); saveBans(b); }
+function removeBan(uid){ const b=loadBans(); delete b[uid]; saveBans(b); renderActiveBans(); }
+function stopBan(uid){ removeBan(uid); }
+
+async function fireBan(uid){
+  try{
+    const r=await fetch(MW_BAN+'?bandev='+encodeURIComponent(uid));
+    const t=(await r.text()).trim();
+    return {status:r.status, text:t, ok: r.status===200 && /done/i.test(t)};
+  }catch(e){ return {ok:false, error:e.message}; }
+}
+
 let mwBanArmed=false,mwBanTimer=null;
 async function mwBan(){
   const uid=mwFixUin(document.getElementById('mwBanUid').value.trim());
   const btn=document.getElementById('btnMwBan');
   if(!uid){mwErr('mwBan','Masukkan UID yang valid (8-10 digit angka).');return;}
+  const durSec=parseInt((document.querySelector('input[name=mwdur]:checked')||{}).value||'180',10);
 
   // First click: arm. Second click: fire.
   if(!mwBanArmed){
-    mwBanArmed=true;
-    btn.textContent='CONFIRM BAN?';
-    btn.classList.add('confirming');
+    mwBanArmed=true;btn.textContent='CONFIRM BAN?';btn.classList.add('confirming');
     clearTimeout(mwBanTimer);
-    mwBanTimer=setTimeout(()=>{
-      mwBanArmed=false;btn.textContent='BAN DEVICE';btn.classList.remove('confirming');
-    },4000);
+    mwBanTimer=setTimeout(()=>{mwBanArmed=false;btn.textContent='BAN DEVICE';btn.classList.remove('confirming');},4000);
     return;
   }
   // Disarm + fire
@@ -578,29 +628,70 @@ async function mwBan(){
   document.getElementById('mwBanResult').classList.remove('show','ok','bad');
   document.getElementById('mwBanLoading').classList.add('show');
   btn.disabled=true;
-  try{
-    const r=await fetch(MW_BAN+'?bandev='+encodeURIComponent(uid));
-    const t=(await r.text()).trim();
-    document.getElementById('mwBanLoading').classList.remove('show');
-    const res=document.getElementById('mwBanResult');
-    if(r.status===200 && /done/i.test(t)){
-      res.className='banner ok show';
-      res.innerHTML=`<span class="big">✅ BAN TERKIRIM</span>Device UID <strong>${uid}</strong> berhasil di-ban selama <strong>~3 menit</strong>.<br><span style="color:#86efac90">Balasan API: ${t.replace(/[<>&]/g,'')}</span>`;
-    }else if(r.status===404){
+
+  const res0=await fireBan(uid);
+  document.getElementById('mwBanLoading').classList.remove('show');
+  const res=document.getElementById('mwBanResult');
+
+  if(!res0.ok){
+    if(res0.status===404){
       res.className='banner bad show';
       res.innerHTML=`<span class="big">❌ DEVICE TIDAK DITEMUKAN</span>UID <strong>${uid}</strong> tidak ditemukan di database device.`;
     }else{
-      let msg='';
-      try{msg=JSON.parse(t).error||'';}catch(_){}
+      let msg='';try{msg=JSON.parse(res0.text||'').error||'';}catch(_){}
       res.className='banner bad show';
-      res.innerHTML=`<span class="big">❌ GAGAL</span>${msg.replace(/[<>&]/g,'')||('API mengembalikan HTTP '+r.status+'.')}`;
+      res.innerHTML=`<span class="big">❌ GAGAL</span>${(msg||res0.error||('API mengembalikan HTTP '+res0.status+'.')).replace(/[<>&]/g,'')}`;
     }
-  }catch(err){
-    document.getElementById('mwBanLoading').classList.remove('show');
-    mwErr('mwBan','Gagal mengirim request: '+err.message);
+    btn.disabled=false;return;
   }
+
+  if(durSec>180){
+    const until=Date.now()+durSec*1000;
+    putBan(uid,{until,nextAt:Date.now()+MW_REPEAT_MS,repeatMs:MW_REPEAT_MS});
+    const human = durSec>=86400 ? (durSec/86400)+' hari' : (durSec/3600)+' jam';
+    res.className='banner ok show';
+    res.innerHTML=`<span class="big">✅ BAN LOOP DIMULAI</span>UID <strong>${uid}</strong> di-ban, diulang tiap <strong>3 menit</strong> selama <strong>${human}</strong>.<br><span style="color:#86efac90">Biarkan tab ini terbuka supaya loop jalan terus.</span>`;
+  }else{
+    res.className='banner ok show';
+    res.innerHTML=`<span class="big">✅ BAN TERKIRIM</span>Device UID <strong>${uid}</strong> di-ban selama <strong>~3 menit</strong> (sekali kirim).<br><span style="color:#86efac90">Balasan API: ${res0.text.replace(/[<>&]/g,'')}</span>`;
+  }
+  renderActiveBans();
   btn.disabled=false;
 }
+
+/* Scheduler: re-fire due ban-loops every ~30s (same logic as Discord bot). */
+function schedulerTick(){
+  const now=Date.now();const bans=loadBans();let changed=false;
+  for(const uid of Object.keys(bans)){
+    const b=bans[uid];
+    if(!b || b.until<=now){ delete bans[uid]; changed=true; continue; }
+    if(b.nextAt<=now){ fireBan(uid); b.nextAt=now+(b.repeatMs||MW_REPEAT_MS); changed=true; }
+  }
+  if(changed) saveBans(bans);
+  renderActiveBans();
+}
+setInterval(schedulerTick,30000);
+
+function renderActiveBans(){
+  const wrap=document.getElementById('mwActiveBans');
+  const list=document.getElementById('mwAbList');
+  if(!wrap||!list) return;
+  const bans=loadBans();const now=Date.now();
+  const uids=Object.keys(bans).filter(u=>bans[u]&&bans[u].until>now);
+  if(!uids.length){wrap.classList.remove('show');list.innerHTML='';return;}
+  list.innerHTML='';
+  for(const uid of uids){
+    const b=bans[uid];
+    const remainMin=Math.max(0,Math.round((b.until-now)/60000));
+    const nextSec=Math.max(0,Math.round((b.nextAt-now)/1000));
+    const item=document.createElement('div');item.className='ab-item';
+    item.innerHTML=`<div><div class="ab-uid">${uid}</div><div class="ab-meta">Sisa ~${remainMin} menit · fire berikutnya ${nextSec}s lagi · ulang tiap 3 menit</div></div>
+      <button class="ab-stop" onclick="stopBan('${uid}')">STOP</button>`;
+    list.appendChild(item);
+  }
+  wrap.classList.add('show');
+}
+renderActiveBans(); // initial render on load
 
 /* ===== ROBLOX CHECKER ===== */
 function rbxShowErr(msg){
