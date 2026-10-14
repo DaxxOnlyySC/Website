@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,6 +37,8 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 .subtitle{margin-top:8px;font-size:.9rem;color:#94a3b8;letter-spacing:12px;text-transform:uppercase;animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
 .header .tag{margin-top:14px;font-size:.8rem;color:#64748b;letter-spacing:2px}
+.founder{margin-bottom:10px;font-size:.82rem;font-weight:700;letter-spacing:3px;color:#facc15;
+  text-shadow:0 0 14px rgba(250,204,21,.5)}
 
 /* ===== NAV ===== */
 .nav{position:relative;z-index:10;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:26px 20px 8px}
@@ -200,6 +202,7 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 <div class="shooting" style="top:75%;left:-5%;animation-delay:7.5s"></div>
 
 <div class="header">
+  <p class="founder">FOUNDER DN2: Daxterrr (Darkk), Khairan, Luki</p>
   <h1 class="big-title">DARK COMMUNITY</h1>
   <p class="subtitle">Shadow Never Sleeps</p>
   <p class="tag">MINI WORLD · FREE FIRE · ROBLOX — TOOLS &amp; CHECKERS</p>
@@ -220,17 +223,17 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
   <div class="card mw" style="max-width:720px;margin:0 auto">
     <span class="kicker">MINI WORLD</span>
     <h2>🌍 Check Player</h2>
-    <p class="desc">Masukkan UID Mini World untuk melihat nickname, avatar, negara, mood, dan bahasa akun.</p>
+    <p class="desc">Enter a Mini World UID to see nickname, avatar, country, mood, and account language.</p>
 
     <div class="form-row">
-      <input type="text" id="mwUid" placeholder="Contoh: 1320454366" maxlength="12" onkeypress="if(event.key==='Enter')mwCheck()">
+      <input type="text" id="mwUid" placeholder="e.g. 1320454366" maxlength="12" onkeypress="if(event.key==='Enter')mwCheck()">
       <button id="btnMwCheck" onclick="mwCheck()">CHECK</button>
     </div>
-    <p class="hint">UID 8 digit otomatis jadi 10 digit (normalisasi sama seperti bot).</p>
+    <p class="hint">An 8-digit UID is automatically converted to 10 digits (same normalization as the bot).</p>
 
     <div id="mwLoading" class="loading">
       <div class="spinner"></div>
-      <p>MENGAMBIL DATA DARI BAYANGAN MINI WORLD...</p>
+      <p>FETCHING DATA FROM THE MINI WORLD SHADOWS...</p>
     </div>
 
     <div id="mwError" class="error"></div>
@@ -254,21 +257,29 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
   <div class="card mw" style="max-width:720px;margin:0 auto">
     <span class="kicker">MINI WORLD</span>
     <h2>🏠 Room &amp; Password Check</h2>
-    <p class="desc">Cek status player: sedang online, di dalam room apa, jumlah pemain, host, dan password room-nya.</p>
+    <p class="desc">Check a player's status: online or not, which room they're in, player count, host, and the room password. Uses the same profile API as the bot's <code>!check</code>.</p>
 
     <div class="form-row">
-      <input type="text" id="mwRoomUid" placeholder="Contoh: 1320454366" maxlength="12" onkeypress="if(event.key==='Enter')mwRoom()">
+      <input type="text" id="mwRoomUid" placeholder="e.g. 1320454366" maxlength="12" onkeypress="if(event.key==='Enter')mwRoom()">
       <button id="btnMwRoom" onclick="mwRoom()">CHECK ROOM</button>
     </div>
 
     <div id="mwRoomLoading" class="loading">
       <div class="spinner"></div>
-      <p>MEMERIKSA STATUS ROOM...</p>
+      <p>CHECKING ROOM STATUS...</p>
     </div>
 
     <div id="mwRoomError" class="error"></div>
 
     <div id="mwRoomResults" class="results">
+      <div class="mw-profile" id="mwRoomProfile" style="display:none">
+        <img id="mwRoomAvatar" class="mw-avatar" alt="Avatar" style="display:none">
+        <div id="mwRoomAvatarFallback" class="mw-avatar-fallback" style="display:none">?</div>
+        <div>
+          <div class="mw-name" id="mwRoomName">-</div>
+          <div class="mw-sub" id="mwRoomSub">-</div>
+        </div>
+      </div>
       <div class="res-grid" id="mwRoomGrid"></div>
     </div>
   </div>
@@ -279,30 +290,30 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
   <div class="card danger" style="max-width:720px;margin:0 auto">
     <span class="kicker danger">MINI WORLD · DANGER</span>
     <h2>🚫 Ban Player Device</h2>
-    <p class="desc">Kirim request ban device ke UID target. Pilih durasi — <strong>2 Jam</strong> / <strong>1 Hari</strong> akan diulang otomatis tiap 3 menit (sama seperti ban di bot Discord).</p>
+    <p class="desc">Send a device ban request to the target UID. Choose a duration — <strong>2 Hours</strong> / <strong>1 Day</strong> are automatically repeated every 3 minutes (same as the ban in the Discord bot).</p>
 
     <div class="form-row">
-      <input type="text" id="mwBanUid" placeholder="Contoh: 1320454366" maxlength="12" onkeypress="if(event.key==='Enter')mwBan()">
+      <input type="text" id="mwBanUid" placeholder="e.g. 1320454366" maxlength="12" onkeypress="if(event.key==='Enter')mwBan()">
       <button id="btnMwBan" class="danger" onclick="mwBan()">BAN DEVICE</button>
     </div>
 
     <div class="dur-options">
-      <label class="dur-opt"><input type="radio" name="mwdur" value="180" checked><span>⚡ 3 Menit<span class="loop-tag">Sekali kirim</span></span></label>
-      <label class="dur-opt"><input type="radio" name="mwdur" value="7200"><span>🕒 2 Jam<span class="loop-tag">Loop tiap 3 menit</span></span></label>
-      <label class="dur-opt"><input type="radio" name="mwdur" value="86400"><span>📅 1 Hari<span class="loop-tag">Loop tiap 3 menit</span></span></label>
+      <label class="dur-opt"><input type="radio" name="mwdur" value="180" checked><span>⚡ 3 Minutes<span class="loop-tag">Single shot</span></span></label>
+      <label class="dur-opt"><input type="radio" name="mwdur" value="7200"><span>🕒 2 Hours<span class="loop-tag">Repeats every 3 min</span></span></label>
+      <label class="dur-opt"><input type="radio" name="mwdur" value="86400"><span>📅 1 Day<span class="loop-tag">Repeats every 3 min</span></span></label>
     </div>
-    <p class="hint">⚠️ Klik BAN sekali untuk menyiapkan, klik lagi untuk konfirmasi. Durasi loop (2 Jam / 1 Hari) jalan selama tab ini terbuka.</p>
+    <p class="hint">⚠️ Click BAN once to arm, click again to confirm. Loop durations (2 Hours / 1 Day) run while this tab stays open.</p>
 
     <div id="mwBanLoading" class="loading">
       <div class="spinner"></div>
-      <p>MENGIRIM REQUEST BAN...</p>
+      <p>SENDING BAN REQUEST...</p>
     </div>
 
     <div id="mwBanError" class="error"></div>
     <div id="mwBanResult" class="banner"></div>
 
     <div id="mwActiveBans" class="active-bans">
-      <h4>🔴 Ban Loop Aktif</h4>
+      <h4>🔴 Active Ban Loops</h4>
       <div id="mwAbList" class="ab-list"></div>
     </div>
   </div>
@@ -313,16 +324,16 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
   <div class="card rbx" style="max-width:720px;margin:0 auto">
     <span class="kicker rbx">ROBLOX</span>
     <h2>🎲 Roblox Player Checker</h2>
-    <p class="desc">Masukkan username Roblox untuk melihat profil lengkap — display name, ID, bio, teman, followers, badge, dan primary group.</p>
+    <p class="desc">Enter a Roblox username to see the full profile — display name, ID, bio, friends, followers, badges, and primary group.</p>
 
     <div class="form-row">
-      <input type="text" id="rbxUser" placeholder="Contoh: Roblox" maxlength="20" onkeypress="if(event.key==='Enter')checkRbx()">
+      <input type="text" id="rbxUser" placeholder="e.g. Roblox" maxlength="20" onkeypress="if(event.key==='Enter')checkRbx()">
       <button id="btnRbx" onclick="checkRbx()">CHECK</button>
     </div>
 
     <div id="rbxLoading" class="loading">
       <div class="spinner"></div>
-      <p>MENGAMBIL DATA DARI BAYANGAN ROBLOX...</p>
+      <p>FETCHING DATA FROM THE ROBLOX SHADOWS...</p>
     </div>
 
     <div id="rbxError" class="error"></div>
@@ -341,16 +352,16 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
   <div class="card ff" style="max-width:720px;margin:0 auto">
     <span class="kicker ff">FREE FIRE</span>
     <h2>🔥 Free Fire Player Checker</h2>
-    <p class="desc">Masukkan ID pemain Free Fire (8-20 digit) untuk melihat profil, tanggal akun, rank, role, dan status online.</p>
+    <p class="desc">Enter a Free Fire player ID (8-20 digits) to see the profile, account date, rank, role, and online status.</p>
 
     <div class="form-row">
-      <input type="text" id="ffId" placeholder="Contoh: 12022250" maxlength="20" onkeypress="if(event.key==='Enter')checkPlayer()">
+      <input type="text" id="ffId" placeholder="e.g. 12022250" maxlength="20" onkeypress="if(event.key==='Enter')checkPlayer()">
       <button id="btnCheck" onclick="checkPlayer()">CHECK</button>
     </div>
 
     <div id="loading" class="loading">
       <div class="spinner"></div>
-      <p>MENGUMPULKAN DATA DARI BAYANGAN...</p>
+      <p>GATHERING DATA FROM THE SHADOWS...</p>
     </div>
 
     <div id="error" class="error"></div>
@@ -365,8 +376,8 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 <div id="tools" class="section">
   <div class="card tools" style="max-width:580px;margin:0 auto;text-align:center">
     <span class="kicker tools">TOOLS</span>
-    <h2 style="justify-content:center">🛠️ Tools Lua Mini World</h2>
-    <p class="desc">LuaExecV4 — editor &amp; executor Lua untuk Mini World: CREATA.</p>
+    <h2 style="justify-content:center">🛠️ Mini World Lua Tools</h2>
+    <p class="desc">LuaExecV4 — Lua editor &amp; executor for Mini World: CREATA.</p>
 
     <div class="dl-wrap">
       <a class="dl-btn" href="/dl/lua" target="_blank" rel="noopener" onclick="return dlLua(this)">⬇ DOWNLOAD</a>
@@ -374,7 +385,7 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
     </div>
 
     <img class="tool-shot" src="Screenshot%202026-09-25%20010104.png" alt="LuaExecV4 - By: Daxterr" onerror="this.style.display='none'">
-    <p class="tool-desc">LuaExeV4 dibuat oleh Daxterr untuk game Mini World yang bertujuan mempelajari Lua dalam game dan juga API yang bisa discan melalui LuaExeV4 menggunakan file-file yang sudah disediakan.</p>
+    <p class="tool-desc">LuaExeV4 was built by Daxterr for the game Mini World, designed to study Lua in-game as well as APIs that can be scanned through LuaExeV4 using the provided files.</p>
   </div>
 </div>
 
@@ -382,35 +393,35 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 <div id="article" class="section">
   <div class="card article">
     <span class="kicker art">DN2 STORY</span>
-    <h2>🌙 Bagaimana Komunitas DN2 Bangkit?</h2>
-    <p class="desc">Kisah perjalanan Komunitas DN2 dari Sirkel NFA di Mini World: CREATA.</p>
+    <h2>🌙 How Did the DN2 Community Rise?</h2>
+    <p class="desc">The story of the DN2 Community's journey from the NFA Circle in Mini World: CREATA.</p>
 
-    <h3>🌑 Asal-Usul DN2</h3>
-    <p>Awal mulanya Komunitas DN2 ialah salah satu Komunitas dari <strong>Sirkel NFA</strong> yang didirikan oleh <strong>Ugast</strong> yang dikenali sebagai <strong>Kengo</strong> pada tahun <strong>2021</strong>.</p>
-    <p>Tujuan DN2 dan juga tujuan Sirkel NFA ini apa?</p>
+    <h3>🌑 The Origin of DN2</h3>
+    <p>The DN2 Community originally began as one of the communities from the <strong>NFA Circle</strong>, founded by <strong>Ugast</strong>, known as <strong>Kengo</strong>, in <strong>2021</strong>.</p>
+    <p>What is the goal of DN2 and also of the NFA Circle?</p>
 
     <div class="highlight">
-      Tujuan pertama Sirkel NFA dan DN2 ialah membasmi semua politik dan juga Pedofile di game Mini World: CREATA — terutama player yang dikenali sebagai "Saga" yang suka bermain politik hingga membuat game menjadi sepi dan bubar, karena perbuatan politiknya yang membuat player lain tidak merasa nyaman.
+      The first goal of the NFA Circle and DN2 was to eradicate all politics and also pedophiles in the game Mini World: CREATA — especially the player known as "Saga" who liked to play politics until it made the game empty and shut down, because their political actions made other players uncomfortable.
     </div>
 
-    <p>Dan juga tujuan dari Komunitas DN2 dan juga Sirkel NFA adalah membasmi semua para cheater hama yang menggunakan Cheat Engine untuk melakukan kesiksaan ataupun melakukan tindakan jahat.</p>
+    <p>And also the goal of the DN2 Community and the NFA Circle is to eradicate all the cheater pests who use Cheat Engine to commit abuse or malicious acts.</p>
 
-    <h3>⚔️ Trio Pembasmi SAGA</h3>
-    <p>Komunitas Sirkel NFA sudah bangkit dari awal tahun 2025 hingga tahun 2026 masih bertahan dari segala ancaman yang berlalu dari luar. Beberapa player yang pernah turun ke war membasmi SAGA dan hingga kini <strong>menang 5x berturut-turut</strong>:</p>
+    <h3>⚔️ The Trio Who Eradicated SAGA</h3>
+    <p>The NFA Circle community has risen from early 2025 to 2026, still standing against every threat that passed from outside. Several players who went down to war to eradicate SAGA and to this day have <strong>won 5 times in a row</strong>:</p>
     <ul>
       <li><strong>Flaky</strong> 🇮🇩</li>
       <li><strong>NatZhu</strong> 🇮🇩</li>
       <li><strong>Daxterr</strong> 🇮🇩</li>
     </ul>
-    <p>#TRIO yang pernah membasmi player politik yang merusak suasana game dan juga merusak kenyamanan player lain.</p>
+    <p>#TRIO who have eradicated the political players who ruined the game's atmosphere and also ruined other players' comfort.</p>
 
     <div class="quote">
-      "Kami bukan sekadar grup — kami adalah gerakan."
-      <strong>— SIRKEL NFA / DN2</strong>
+      "We are not just a group — we are a movement."
+      <strong>— NFA CIRCLE / DN2</strong>
     </div>
 
-    <h3>🏆 Murid-Murid Top Nusantara</h3>
-    <p>Beberapa cheater dari Sirkel NFA dan juga Komunitas DN2 yang berhasil dilatih oleh <strong>Daxterr</strong> dan kini berjaya merayai Top Nusantara. Beberapa murid yang telah dilatih dan kini berjaya memasuki Top Cheater Nusantara, dan hampir mengalahkan gurunya sendiri:</p>
+    <h3>🏆 The Top Nusantara Students</h3>
+    <p>Several cheaters from the NFA Circle and also the DN2 Community who succeeded in being trained by <strong>Daxterr</strong> and now celebrate Top Nusantara. Several students who have been trained and now succeed in entering Top Cheater Nusantara, and almost beating their own teacher:</p>
     <ul>
       <li><strong>Tsurugi</strong> [PC] 🇮🇩</li>
       <li><strong>Flaky</strong> [PC] 🇮🇩</li>
@@ -421,16 +432,16 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
       <li><strong>Kenji</strong> [PC] 🇮🇩</li>
       <li><strong>NatZhu</strong> [PC] 🇮🇩</li>
     </ul>
-    <p>Guru utama (Daxterr) ialah: <strong>Sans — Anggota PMC</strong>.</p>
-    <p>Hingga saat ini beberapa cheater top ini masih aktif dan menjalankan tugas untuk membasmi player politik maupun Pedofile di dalam game.</p>
+    <p>The main teacher (Daxterr) is: <strong>Sans — PMC Member</strong>.</p>
+    <p>Until now, several of these top cheaters are still active and carrying out their duty to eradicate political players and also pedophiles in the game.</p>
 
-    <h3>🌌 Kekuatan di Balik Nama</h3>
-    <p>DN2 bangkit bukan karena kebetulan. Bangkit karena setiap anggota memahami bahwa komunitas ini lebih besar dari diri kami sendiri. Kami bukan sekadar grup — kami adalah gerakan. Sebuah gerakan yang dipercayai oleh kalangan Komunitas Mini World: CREATA.</p>
-    <p>DN2 bukan hanya bertahan — kami adalah komunitas yang berkembang. Dari segelintir orang di ruang-ruang gelap, menjadi kekuatan yang dihitung. Bukan dengan senjata, tapi dengan persatuan.</p>
+    <h3>🌌 The Power Behind the Name</h3>
+    <p>DN2 did not rise by chance. It rose because every member understands that this community is bigger than ourselves. We are not just a group — we are a movement. A movement trusted by the circles of the Mini World: CREATA Community.</p>
+    <p>DN2 does not just survive — we are a growing community. From a handful of people in dark rooms, into a force to be reckoned with. Not with weapons, but with unity.</p>
 
     <div class="quote">
       "DARK COMMUNITY — Shadow Never Sleeps."
-      <strong>SELAMANYA</strong>
+      <strong>FOREVER</strong>
     </div>
   </div>
 </div>
@@ -468,7 +479,7 @@ function dlLua(e){
 
 /* ===== MINI WORLD SHARED ===== */
 const MW_CHECK='https://baseinfov1.daxterrantares.workers.dev/';
-const MW_ROOM='https://checkroompw.daxterrantares.workers.dev/';
+const MW_PROFILE='https://profile-acc.shop-miniworld-vcm.workers.dev/get='; /* !check API */
 const MW_BAN='https://bandev.daxterrantares.workers.dev/';
 
 /* Same normalization as the WA/Discord bot: 8-digit -> 10, 9-digit -> 1+ */
@@ -496,7 +507,7 @@ function mwCard(grid,label,value,sub,badge){
 /* ===== MINI WORLD CHECK PLAYER ===== */
 async function mwCheck(){
   const uid=mwFixUin(document.getElementById('mwUid').value.trim());
-  if(!uid){mwErr('mw','Masukkan UID yang valid (8-10 digit angka).');return;}
+  if(!uid){mwErr('mw','Enter a valid UID (8-10 digits).');return;}
   document.getElementById('mwError').classList.remove('show');
   document.getElementById('mwResults').classList.remove('show');
   document.getElementById('mwLoading').classList.add('show');
@@ -507,7 +518,7 @@ async function mwCheck(){
     const entry=j && (j['1']||j[1]||(j[0]?j:null)||(Object.values(j)[0]));
     const prof=entry && entry.profile;
     document.getElementById('mwLoading').classList.remove('show');
-    if(!prof || (prof.uin==null && entry.uin==null)){mwErr('mw','Data tidak ditemukan untuk UID '+uid+'.');return;}
+    if(!prof || (prof.uin==null && entry.uin==null)){mwErr('mw','Data not found for UID '+uid+'.');return;}
 
     const role=prof.RoleInfo||{};
     const nick=role.NickName||prof.NickName||'-';
@@ -528,64 +539,178 @@ async function mwCheck(){
       img.style.display='none';fb.style.display='flex';fb.textContent=nick.charAt(0).toUpperCase()||'?';
     }
     document.getElementById('mwName').textContent=nick;
-    document.getElementById('mwSub').textContent='UID '+uid+' · Negara '+country;
+    document.getElementById('mwSub').textContent='UID '+uid+' · '+country;
     profWrap.style.display='flex';
 
     const g=document.getElementById('mwGrid');g.innerHTML='';
     mwCard(g,'UID',String(prof.uin||entry.uin||uid));
     mwCard(g,'Nickname',nick.replace(/[<>&]/g,''));
-    mwCard(g,'Country',country,'Kode negara akun');
+    mwCard(g,'Country',country,'Account country code');
     mwCard(g,'Mood',mood.replace(/[<>&]/g,'')||'-');
     mwCard(g,'Language',lang||'-');
-    mwCard(g,'Status','<span class="badge mw">AKUN VALID</span>','Ditemukan di database Mini World',true);
+    mwCard(g,'Status','<span class="badge mw">VALID ACCOUNT</span>','Found in the Mini World database',true);
 
     document.getElementById('mwResults').classList.add('show');
-  }catch(err){document.getElementById('mwLoading').classList.remove('show');mwErr('mw','Gagal mengambil data: '+err.message);}
+  }catch(err){document.getElementById('mwLoading').classList.remove('show');mwErr('mw','Failed to fetch data: '+err.message);}
   document.getElementById('btnMwCheck').disabled=false;
 }
 
-/* ===== MINI WORLD ROOM CHECK ===== */
+/* ===== MINI WORLD ROOM & PASSWORD CHECK (via the bot's !check profile API) ===== */
+
+/* Lua-table parser — ported 1:1 from the bot's lib/luaparse.js (deep).
+   Format: {["key"]="value",["num"]=123,["tbl"]={...}} */
+function mwDeep(v){
+  if(typeof v!=='string') return v;
+  const t=v.trim(); const WS=' \t\r\n'; const n=t.length;
+  if(!(t.startsWith('{')&&t.includes('='))) return v;
+  let i=0;
+  function parseValue(){
+    while(i<n&&WS.includes(t[i]))i++;
+    if(i>=n)return null;
+    const c=t[i];
+    if(c==='{')return parseTable();
+    if(c==='"'||c==="'"){const q=c;i++;let out='';while(i<n){if(t[i]==='\\'&&i+1<n){const nx=t[i+1];const map={n:'\n',t:'\t','"':'"',"'":"'",'\\':'\\'};out+=(nx in map)?map[nx]:nx;i+=2;continue;}if(t[i]===q){i++;break;}out+=t[i];i++;}return out;}
+    const st=i;while(i<n&&t[i]!==','&&t[i]!=='}')i++;
+    const tok=t.slice(st,i).trim();
+    if(tok==='true')return true;if(tok==='false')return false;if(tok==='nil')return null;
+    if(/^-?\d+$/.test(tok))return parseInt(tok,10);
+    if(/^-?\d*\.\d+$/.test(tok))return parseFloat(tok);
+    return tok;
+  }
+  function parseTable(){
+    i++;const obj={};
+    while(true){
+      while(i<n&&' \t\r\n,'.includes(t[i]))i++;
+      if(i>=n)break;
+      if(t[i]==='}'){i++;break;}
+      let key;
+      if(t[i]==='['){i++;
+        if(i<n&&(t[i]==='"'||t[i]==="'")){const q=t[i];i++;const st=i;while(i<n&&t[i]!==q)i++;key=t.slice(st,i);i++;}
+        else{const st=i;while(i<n&&t[i]!==']')i++;key=t.slice(st,i).trim();}
+        while(i<n&&t[i]!==']')i++;i++;
+      }else{const st=i;while(i<n&&!'= \t\r\n'.includes(t[i]))i++;key=t.slice(st,i).trim();}
+      while(i<n&&WS.includes(t[i]))i++;
+      if(i<n&&t[i]==='=')i++;
+      while(i<n&&WS.includes(t[i]))i++;
+      const val=parseValue();obj[String(key)]=val;
+    }
+    return obj;
+  }
+  try{const r=parseTable();if(r&&typeof r==='object'&&Object.keys(r).length)return r;}catch(_){}
+  return v;
+}
+/* JSON-string -> object (mirrors the bot's deepJson). */
+function mwDeepJson(v){
+  if(typeof v==='string'){const t=v.trim();if(t.startsWith('{')||t.startsWith('[')){try{return JSON.parse(t);}catch(_){}}}
+  return v;
+}
+/* True when the profile worker's room sub-fetch was rate-limited (vip came back as a string). */
+function mwVipRateLimited(vip){return typeof vip==='string'&&/too many requests/i.test(vip);}
+
 async function mwRoom(){
   const uid=mwFixUin(document.getElementById('mwRoomUid').value.trim());
-  if(!uid){mwErr('mwRoom','Masukkan UID yang valid (8-10 digit angka).');return;}
+  if(!uid){mwErr('mwRoom','Enter a valid UID (8-10 digits).');return;}
   document.getElementById('mwRoomError').classList.remove('show');
   document.getElementById('mwRoomResults').classList.remove('show');
   document.getElementById('mwRoomLoading').classList.add('show');
   document.getElementById('btnMwRoom').disabled=true;
   try{
-    const r=await fetch(MW_ROOM+'?uid='+encodeURIComponent(uid));
-    const d=await r.json();
+    const r=await fetch(MW_PROFILE+encodeURIComponent(uid));
+    const j=await r.json();
     document.getElementById('mwRoomLoading').classList.remove('show');
-    if(d.error){mwErr('mwRoom',d.error);return;}
+    if(String(j.code)!=='0'){mwErr('mwRoom','API returned code='+j.code+(j.msg?(' / '+j.msg):''));return;}
+
+    /* ---- profile (Lua-table string) ---- */
+    let prof=mwDeep(j.profile||'');
+    if(prof&&typeof prof==='object'&&'profile'in prof)prof=mwDeep(prof.profile);
+    if(!prof||typeof prof!=='object')prof={};
+    const role=(prof.RoleInfo&&typeof prof.RoleInfo==='object')?prof.RoleInfo:{};
+    const nick=role.NickName||prof.NickName||'-';
+    let avatar=(prof.header&&prof.header.url)||null;
+    if(avatar)avatar=avatar.replace(/^http:/,'https:');
+    const country=prof.country||'-';
+
+    /* Profile header (avatar + name) */
+    const profWrap=document.getElementById('mwRoomProfile');
+    const img=document.getElementById('mwRoomAvatar');
+    const fb=document.getElementById('mwRoomAvatarFallback');
+    if(avatar){
+      img.src=avatar;img.style.display='block';fb.style.display='none';
+      img.onerror=()=>{img.style.display='none';fb.style.display='flex';fb.textContent=(nick.charAt(0)||'?').toUpperCase();};
+    }else{
+      img.style.display='none';fb.style.display='flex';fb.textContent=(nick.charAt(0)||'?').toUpperCase();
+    }
+    document.getElementById('mwRoomName').textContent=nick;
+    document.getElementById('mwRoomSub').textContent='UID '+uid+' · '+country;
+    profWrap.style.display='flex';
 
     const g=document.getElementById('mwRoomGrid');g.innerHTML='';
-    // Online badge card
+    const esc=s=>String(s==null?'':s).replace(/[<>&]/g,'');
+
+    /* ---- vip: object when healthy, "Too Many Requests" string when rate-limited ---- */
+    let vip=j.vip;
+    const rateLimited=mwVipRateLimited(vip);
+    if(typeof vip==='string'&&!rateLimited){vip=mwDeepJson(vip);if(typeof vip==='string')vip=mwDeep(vip);}
+    if(!vip||typeof vip!=='object')vip={};
+
+    /* Online status card */
+    const online=!!vip.online;
+    const lastLogin=vip.LastLoginTime||null;
     const oc=document.createElement('div');oc.className='res-card';
-    oc.innerHTML=`<div class="label">Status</div><div class="value"><span class="badge ${d.online?'on':'off'}">${d.online?'● ONLINE':'○ OFFLINE'}</span></div><div class="sub">${d.lastLogin?('Last login: '+d.lastLogin):''}</div>`;
+    oc.innerHTML=`<div class="label">Status</div><div class="value"><span class="badge ${rateLimited?'off':(online?'on':'off')}">${rateLimited?'◐ UNKNOWN':(online?'● ONLINE':'○ OFFLINE')}</span></div><div class="sub">${(!rateLimited&&lastLogin)?('Last login: '+esc(lastLogin)):''}</div>`;
     g.appendChild(oc);
-    // In-room badge card
+
+    if(rateLimited){
+      /* Room sub-fetch is rate-limited upstream — profile shown above is still valid. */
+      const wc=document.createElement('div');wc.className='res-card';
+      wc.innerHTML=`<div class="label">Room &amp; Password</div><div class="value"><span class="badge historic">RATE LIMITED</span></div><div class="sub">The room-status service is temporarily rate-limited. Profile data above is valid — try again in a little while for the room/password.</div>`;
+      g.appendChild(wc);
+      document.getElementById('mwRoomResults').classList.add('show');
+      document.getElementById('btnMwRoom').disabled=false;
+      return;
+    }
+
+    /* statusinfo (Lua-table) + roomstatus (JSON -> uinlist of players in room) */
+    const si=mwDeep(vip.statusinfo)||{};
+    let rs=mwDeepJson(mwDeep(vip.roomstatus));
+    if(!rs||typeof rs!=='object')rs={};
+    const inRoom=!!(si.roomID||si.roomname);
+
+    /* In-room badge card */
     const rc=document.createElement('div');rc.className='res-card';
-    rc.innerHTML=`<div class="label">Di Dalam Room</div><div class="value"><span class="badge ${d.inRoom?'mw':'off'}">${d.inRoom?'✓ DI ROOM':'○ TIDAK'}</span></div>`;
+    rc.innerHTML=`<div class="label">In a Room</div><div class="value"><span class="badge ${inRoom?'mw':'off'}">${inRoom?'✓ IN ROOM':'○ NO'}</span></div>`;
     g.appendChild(rc);
 
-    if(d.inRoom){
-      mwCard(g,'Room Name',String(d.roomName||'-').replace(/[<>&]/g,''));
-      mwCard(g,'Room ID',String(d.roomId||'-'));
-      mwCard(g,'Pemain',`${d.players!=null?d.players:'-'} / ${d.maxPlayers!=null?d.maxPlayers:'-'}`,d.isHost?'Host: YA':'Host: tidak');
-      mwCard(g,'Server',String(d.server||'-'),d.roomType?('Tipe: '+d.roomType):'');
-      // Password
+    if(inRoom){
+      mwCard(g,'Room Name',esc(si.roomname||'-'));
+      mwCard(g,'Room ID',esc(si.roomID||'-'));
+      const cur=si.curPlayerNum!=null?si.curPlayerNum:si.curPlayer;
+      mwCard(g,'Players',`${cur!=null?cur:'-'} / ${si.maxPlayerNum!=null?si.maxPlayerNum:'-'}`,si.isHost?'Host: YES':'Host: no');
+      mwCard(g,'Server',esc(si.roomserverindex||'-'),si.roomtype?('Type: '+esc(si.roomtype)):'');
+      /* Password */
+      const hasPw=!!(si.hostPassword&&String(si.hostPassword).length);
       const pc=document.createElement('div');pc.className='res-card';
-      if(d.hasPassword){
-        pc.innerHTML=`<div class="label">Password Room</div><div class="value"><span class="badge historic">${String(d.password||'').replace(/[<>&]/g,'')||'ADA'}</span></div><div class="sub">Room ini diproteksi password</div>`;
+      if(hasPw){
+        pc.innerHTML=`<div class="label">Room Password</div><div class="value"><span class="badge historic">${esc(si.hostPassword)}</span></div><div class="sub">This room is password protected</div>`;
       }else{
-        pc.innerHTML=`<div class="label">Password Room</div><div class="value"><span class="badge off">TIDAK ADA</span></div><div class="sub">Room terbuka</div>`;
+        pc.innerHTML=`<div class="label">Room Password</div><div class="value"><span class="badge off">NONE</span></div><div class="sub">Public room</div>`;
       }
       g.appendChild(pc);
+
+      /* Players currently in the room (from roomstatus.uinlist) */
+      const ids=rs.uinlist?String(rs.uinlist).split(',').filter(Boolean):[];
+      if(ids.length){
+        const you=String(uid);
+        const list=ids.map(x=>`• ${esc(x)}${x===you?' — you':''}`).join('<br>');
+        const plc=document.createElement('div');plc.className='res-card';
+        plc.innerHTML=`<div class="label">Players in Room (${ids.length})</div><div class="value small">${list}</div>`;
+        g.appendChild(plc);
+      }
     }else{
-      mwCard(g,'Room','<span class="badge off">SEDANG DI LUAR ROOM</span>','Player tidak sedang berada di room manapun',true);
+      mwCard(g,'Room','<span class="badge off">NOT IN A ROOM</span>','Player is not currently in any room',true);
     }
     document.getElementById('mwRoomResults').classList.add('show');
-  }catch(err){document.getElementById('mwRoomLoading').classList.remove('show');mwErr('mwRoom','Gagal mengambil data: '+err.message);}
+  }catch(err){document.getElementById('mwRoomLoading').classList.remove('show');mwErr('mwRoom','Failed to fetch data: '+err.message);}
   document.getElementById('btnMwRoom').disabled=false;
 }
 
@@ -611,7 +736,7 @@ let mwBanArmed=false,mwBanTimer=null;
 async function mwBan(){
   const uid=mwFixUin(document.getElementById('mwBanUid').value.trim());
   const btn=document.getElementById('btnMwBan');
-  if(!uid){mwErr('mwBan','Masukkan UID yang valid (8-10 digit angka).');return;}
+  if(!uid){mwErr('mwBan','Enter a valid UID (8-10 digits).');return;}
   const durSec=parseInt((document.querySelector('input[name=mwdur]:checked')||{}).value||'180',10);
 
   // First click: arm. Second click: fire.
@@ -636,11 +761,11 @@ async function mwBan(){
   if(!res0.ok){
     if(res0.status===404){
       res.className='banner bad show';
-      res.innerHTML=`<span class="big">❌ DEVICE TIDAK DITEMUKAN</span>UID <strong>${uid}</strong> tidak ditemukan di database device.`;
+      res.innerHTML=`<span class="big">❌ DEVICE NOT FOUND</span>UID <strong>${uid}</strong> was not found in the device database.`;
     }else{
       let msg='';try{msg=JSON.parse(res0.text||'').error||'';}catch(_){}
       res.className='banner bad show';
-      res.innerHTML=`<span class="big">❌ GAGAL</span>${(msg||res0.error||('API mengembalikan HTTP '+res0.status+'.')).replace(/[<>&]/g,'')}`;
+      res.innerHTML=`<span class="big">❌ FAILED</span>${(msg||res0.error||('API returned HTTP '+res0.status+'.')).replace(/[<>&]/g,'')}`;
     }
     btn.disabled=false;return;
   }
@@ -648,12 +773,12 @@ async function mwBan(){
   if(durSec>180){
     const until=Date.now()+durSec*1000;
     putBan(uid,{until,nextAt:Date.now()+MW_REPEAT_MS,repeatMs:MW_REPEAT_MS});
-    const human = durSec>=86400 ? (durSec/86400)+' hari' : (durSec/3600)+' jam';
+    const human = durSec>=86400 ? (durSec/86400)+' day' : (durSec/3600)+' hours';
     res.className='banner ok show';
-    res.innerHTML=`<span class="big">✅ BAN LOOP DIMULAI</span>UID <strong>${uid}</strong> di-ban, diulang tiap <strong>3 menit</strong> selama <strong>${human}</strong>.<br><span style="color:#86efac90">Biarkan tab ini terbuka supaya loop jalan terus.</span>`;
+    res.innerHTML=`<span class="big">✅ BAN LOOP STARTED</span>UID <strong>${uid}</strong> banned, repeating every <strong>3 minutes</strong> for <strong>${human}</strong>.<br><span style="color:#86efac90">Keep this tab open so the loop keeps running.</span>`;
   }else{
     res.className='banner ok show';
-    res.innerHTML=`<span class="big">✅ BAN TERKIRIM</span>Device UID <strong>${uid}</strong> di-ban selama <strong>~3 menit</strong> (sekali kirim).<br><span style="color:#86efac90">Balasan API: ${res0.text.replace(/[<>&]/g,'')}</span>`;
+    res.innerHTML=`<span class="big">✅ BAN SENT</span>Device UID <strong>${uid}</strong> banned for <strong>~3 minutes</strong> (single shot).<br><span style="color:#86efac90">API response: ${res0.text.replace(/[<>&]/g,'')}</span>`;
   }
   renderActiveBans();
   btn.disabled=false;
@@ -685,7 +810,7 @@ function renderActiveBans(){
     const remainMin=Math.max(0,Math.round((b.until-now)/60000));
     const nextSec=Math.max(0,Math.round((b.nextAt-now)/1000));
     const item=document.createElement('div');item.className='ab-item';
-    item.innerHTML=`<div><div class="ab-uid">${uid}</div><div class="ab-meta">Sisa ~${remainMin} menit · fire berikutnya ${nextSec}s lagi · ulang tiap 3 menit</div></div>
+    item.innerHTML=`<div><div class="ab-uid">${uid}</div><div class="ab-meta">${remainMin} min left · next fire in ${nextSec}s · repeats every 3 min</div></div>
       <button class="ab-stop" onclick="stopBan('${uid}')">STOP</button>`;
     list.appendChild(item);
   }
@@ -709,7 +834,7 @@ function rbxCard(grid,label,value,sub,badge){
 }
 async function checkRbx(){
   const u=document.getElementById('rbxUser').value.trim();
-  if(!u||u.length<3){rbxShowErr('Masukkan username Roblox (min 3 karakter).');return;}
+  if(!u||u.length<3){rbxShowErr('Enter a Roblox username (min 3 characters).');return;}
   document.getElementById('rbxError').classList.remove('show');
   document.getElementById('rbxResults').classList.remove('show');
   document.getElementById('rbxLoading').classList.add('show');
@@ -718,7 +843,7 @@ async function checkRbx(){
     const r=await fetch('/rb/profile?username='+encodeURIComponent(u));
     const d=await r.json();
     document.getElementById('rbxLoading').classList.remove('show');
-    if(!d.ok){rbxShowErr(d.message||'User tidak ditemukan!');return;}
+    if(!d.ok){rbxShowErr(d.message||'User not found!');return;}
     const g=document.getElementById('rbxGrid');g.innerHTML='';
     const tw=document.getElementById('rbxThumbWrap');
     if(d.thumbnail){document.getElementById('rbxThumb').src=d.thumbnail;tw.style.display='block';}
@@ -734,11 +859,11 @@ async function checkRbx(){
     }else rbxCard(g,'Badges','None');
     if(d.profileUrl){
       const a=document.createElement('div');a.className='res-card';
-      a.innerHTML=`<div class="label">Profile</div><div class="value"><a href="${d.profileUrl}" target="_blank" rel="noopener" style="color:#ef4444">Buka di Roblox →</a></div>`;
+      a.innerHTML=`<div class="label">Profile</div><div class="value"><a href="${d.profileUrl}" target="_blank" rel="noopener" style="color:#ef4444">Open in Roblox →</a></div>`;
       g.appendChild(a);
     }
     document.getElementById('rbxResults').classList.add('show');
-  }catch(err){rbxShowErr('Gagal mengambil data: '+err.message);}
+  }catch(err){rbxShowErr('Failed to fetch data: '+err.message);}
   document.getElementById('btnRbx').disabled=false;
 }
 
@@ -773,7 +898,7 @@ function addCard(grid,label,value,sub,badge){
 
 async function checkPlayer(){
   const pid=document.getElementById('ffId').value.trim();
-  if(!/^\d{8,20}$/.test(pid)){showErr('ID harus 8-20 digit angka.');return;}
+  if(!/^\d{8,20}$/.test(pid)){showErr('ID must be 8-20 digits.');return;}
   document.getElementById('error').classList.remove('show');
   document.getElementById('results').classList.remove('show');
   document.getElementById('loading').classList.add('show');
@@ -792,7 +917,7 @@ async function checkPlayer(){
     }else addCard(g,'Profile',profile.message||JSON.stringify(profile).slice(0,80));
 
     if(account.state==='ready'||account.state==='stale'){
-      addCard(g,'Akun Dibuat',account.creationDate||'-',`${account.accountAge||''} · ${account.accountDays||''} hari`);
+      addCard(g,'Account Created',account.creationDate||'-',`${account.accountAge||''} · ${account.accountDays||''} days`);
       addCard(g,'Rarity',`${account.rarity||0}%`,account.rarityLabel||'',true);
       const bc=document.createElement('div');bc.className='res-card';
       bc.innerHTML=`<div class="label">Rarity Status</div><div class="value"><span class="badge historic">${account.rarityLabel||'-'}</span></div><div class="sub">${account.rarityMessage||''}</div>`;
@@ -817,15 +942,15 @@ async function checkPlayer(){
       const bc=document.createElement('div');bc.className='res-card';
       if(roles.hasRole){
         const r=(roles.roles||[])[0]||{};
-        bc.innerHTML=`<div class="label">Role Khusus</div><div class="value"><span class="badge role">${r.label||'YES'}</span></div><div class="sub">${roles.categoryLabel||''}</div>`;
+        bc.innerHTML=`<div class="label">Special Role</div><div class="value"><span class="badge role">${r.label||'YES'}</span></div><div class="sub">${roles.categoryLabel||''}</div>`;
       }else{
-        bc.innerHTML=`<div class="label">Role Khusus</div><div class="value"><span class="badge off">TIDAK ADA</span></div>`;
+        bc.innerHTML=`<div class="label">Special Role</div><div class="value"><span class="badge off">NONE</span></div>`;
       }
       g.appendChild(bc);
     }else addCard(g,'Roles',roles.message||JSON.stringify(roles).slice(0,80));
 
     document.getElementById('results').classList.add('show');
-  }catch(err){showErr('Gagal mengambil data: '+err.message);}
+  }catch(err){showErr('Failed to fetch data: '+err.message);}
   document.getElementById('btnCheck').disabled=false;
 }
 
