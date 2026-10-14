@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DARK COMMUNITY</title>
 <style>
+:root{
+  --mw:#06b6d4; --mw2:#22d3ee;
+  --ff:#f97316; --rbx:#ef4444;
+  --tools:#22c55e; --art:#a855f7;
+  --bg-card:rgba(255,255,255,.04);
+  --border:rgba(255,255,255,.1);
+}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-height:100vh;overflow-x:hidden}
@@ -18,7 +25,7 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 @keyframes shoot{0%{opacity:0;transform:translateX(0) translateY(0)}10%{opacity:1}100%{opacity:0;transform:translateX(600px) translateY(400px)}}
 
 /* ===== HEADER / TITLE ===== */
-.header{position:relative;z-index:10;text-align:center;padding:50px 20px 20px}
+.header{position:relative;z-index:10;text-align:center;padding:50px 20px 18px}
 .big-title{font-size:clamp(2.2rem,7vw,5.5rem);font-weight:900;letter-spacing:8px;text-transform:uppercase;
   background:linear-gradient(90deg,#fff 0%,#a855f7 25%,#06b6d4 50%,#a855f7 75%,#fff 100%);
   background-size:400% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
@@ -29,37 +36,64 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 @keyframes glitch{0%,90%,100%{transform:translate(0)}92%{transform:translate(-4px,2px) skewX(-2deg)}94%{transform:translate(4px,-2px) skewX(2deg)}96%{transform:translate(-2px,1px)}98%{transform:translate(3px,-1px)}}
 .subtitle{margin-top:8px;font-size:.9rem;color:#94a3b8;letter-spacing:12px;text-transform:uppercase;animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.header .tag{margin-top:14px;font-size:.8rem;color:#64748b;letter-spacing:2px}
 
 /* ===== NAV ===== */
-.nav{position:relative;z-index:10;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;padding:30px 20px 10px}
+.nav{position:relative;z-index:10;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:26px 20px 8px}
 .nav-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);color:#e2e8f0;
-  padding:14px 32px;font-size:.95rem;font-weight:600;letter-spacing:1px;cursor:pointer;border-radius:50px;
+  padding:11px 22px;font-size:.85rem;font-weight:600;letter-spacing:.5px;cursor:pointer;border-radius:50px;
   transition:all .3s;backdrop-filter:blur(10px);position:relative;overflow:hidden}
 .nav-btn:hover{background:rgba(168,85,247,.2);border-color:#a855f7;color:#fff;box-shadow:0 0 25px rgba(168,85,247,.4);transform:translateY(-2px)}
 .nav-btn.active{background:rgba(168,85,247,.3);border-color:#a855f7;color:#fff;box-shadow:0 0 25px rgba(168,85,247,.5)}
+.nav-btn.mw.active{background:rgba(6,182,212,.3);border-color:var(--mw);box-shadow:0 0 25px rgba(6,182,212,.5)}
+.nav-btn.mw:hover{background:rgba(6,182,212,.2);border-color:var(--mw);box-shadow:0 0 25px rgba(6,182,212,.4)}
+.nav-btn.ff.active{background:rgba(249,115,22,.3);border-color:var(--ff);box-shadow:0 0 25px rgba(249,115,22,.5)}
+.nav-btn.ff:hover{background:rgba(249,115,22,.2);border-color:var(--ff);box-shadow:0 0 25px rgba(249,115,22,.4)}
+.nav-btn.rbx.active{background:rgba(239,68,68,.3);border-color:var(--rbx);box-shadow:0 0 25px rgba(239,68,68,.5)}
+.nav-btn.rbx:hover{background:rgba(239,68,68,.2);border-color:var(--rbx);box-shadow:0 0 25px rgba(239,68,68,.4)}
+.nav-btn.tools.active{background:rgba(34,197,94,.3);border-color:var(--tools);box-shadow:0 0 25px rgba(34,197,94,.5)}
+.nav-btn.tools:hover{background:rgba(34,197,94,.2);border-color:var(--tools);box-shadow:0 0 25px rgba(34,197,94,.4)}
+.nav-btn.art.active{background:rgba(168,85,247,.3);border-color:var(--art)}
 
 /* ===== SECTIONS ===== */
 .section{position:relative;z-index:10;display:none;max-width:900px;margin:30px auto;padding:0 20px 60px;animation:fadeUp .5s ease}
 .section.show{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
-.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:35px;backdrop-filter:blur(15px)}
-.card h2{font-size:1.6rem;margin-bottom:8px;color:#fff}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:35px;backdrop-filter:blur(15px);position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent,#a855f7),transparent);opacity:.7}
+.card.mw{--accent:var(--mw)} .card.ff{--accent:var(--ff)} .card.rbx{--accent:var(--rbx)}
+.card.tools{--accent:var(--tools)} .card.danger{--accent:#ef4444}
+.card h2{font-size:1.6rem;margin-bottom:8px;color:#fff;display:flex;align-items:center;gap:10px}
 .card .desc{color:#94a3b8;font-size:.9rem;margin-bottom:25px;line-height:1.6}
+
+/* ===== KICKER BADGE ===== */
+.kicker{display:inline-block;background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.4);
+  color:var(--mw2);font-size:.7rem;font-weight:800;padding:5px 16px;border-radius:50px;letter-spacing:3px;margin-bottom:14px}
+.kicker.ff{background:rgba(249,115,22,.15);border-color:rgba(249,115,22,.4);color:#fdba74}
+.kicker.rbx{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);color:#fca5a5}
+.kicker.tools{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.4);color:#86efac}
+.kicker.art{background:rgba(168,85,247,.15);border-color:rgba(168,85,247,.4);color:#c084fc}
+.kicker.danger{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.5);color:#fca5a5}
 
 /* ===== CHECKER FORM ===== */
 .form-row{display:flex;gap:12px;flex-wrap:wrap}
 .form-row input{flex:1;min-width:220px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);
   color:#fff;padding:15px 20px;font-size:1.05rem;border-radius:12px;outline:none;transition:border .3s;letter-spacing:2px}
-.form-row input:focus{border-color:#a855f7;box-shadow:0 0 15px rgba(168,85,247,.3)}
-.form-row button{background:linear-gradient(135deg,#a855f7,#06b6d4);border:none;color:#fff;padding:15px 35px;
+.form-row input:focus{border-color:var(--accent,#a855f7);box-shadow:0 0 15px rgba(168,85,247,.3)}
+.form-row button{background:linear-gradient(135deg,var(--accent,#a855f7),#06b6d4);border:none;color:#fff;padding:15px 35px;
   font-size:1rem;font-weight:700;border-radius:12px;cursor:pointer;transition:all .3s;letter-spacing:1px}
 .form-row button:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(168,85,247,.5)}
 .form-row button:disabled{opacity:.5;cursor:wait;transform:none}
+.form-row button.danger{background:linear-gradient(135deg,#ef4444,#b91c1c)}
+.form-row button.danger:hover{box-shadow:0 0 30px rgba(239,68,68,.6)}
+.form-row button.confirming{background:linear-gradient(135deg,#f59e0b,#d97706);animation:pulse 1s infinite}
+
+.hint{margin-top:12px;font-size:.78rem;color:#64748b;letter-spacing:1px}
 
 .loading{text-align:center;padding:40px;display:none}
 .loading.show{display:block}
-.spinner{width:50px;height:50px;border:4px solid rgba(255,255,255,.1);border-top-color:#a855f7;border-radius:50%;
+.spinner{width:50px;height:50px;border:4px solid rgba(255,255,255,.1);border-top-color:var(--accent,#a855f7);border-radius:50%;
   margin:0 auto 15px;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading p{color:#94a3b8;letter-spacing:2px;animation:pulse 1.5s ease-in-out infinite}
@@ -74,10 +108,10 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 .res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
 .res-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;
   padding:22px;transition:all .3s;animation:fadeUp .4s ease both}
-.res-card:hover{border-color:#a855f7;box-shadow:0 0 20px rgba(168,85,247,.2);transform:translateY(-3px)}
+.res-card:hover{border-color:var(--accent,#a855f7);box-shadow:0 0 20px rgba(168,85,247,.2);transform:translateY(-3px)}
 .res-card .label{font-size:.75rem;color:#64748b;text-transform:uppercase;letter-spacing:3px;margin-bottom:6px}
 .res-card .value{font-size:1.3rem;font-weight:700;color:#fff}
-.res-card .value.small{font-size:1rem;font-weight:500;line-height:1.5}
+.res-card .value.small{font-size:1rem;font-weight:500;line-height:1.5;word-break:break-word}
 .res-card .sub{font-size:.8rem;color:#94a3b8;margin-top:4px}
 
 .badge{display:inline-block;padding:3px 12px;border-radius:50px;font-size:.75rem;font-weight:700;letter-spacing:1px}
@@ -85,6 +119,23 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 .badge.off{background:rgba(148,163,184,.15);color:#94a3b8;border:1px solid rgba(148,163,184,.3)}
 .badge.historic{background:rgba(250,204,21,.15);color:#facc15;border:1px solid rgba(250,204,21,.4)}
 .badge.role{background:rgba(168,85,247,.2);color:#c084fc;border:1px solid rgba(168,85,247,.4)}
+.badge.mw{background:rgba(6,182,212,.2);color:#67e8f9;border:1px solid rgba(6,182,212,.4)}
+.badge.danger{background:rgba(239,68,68,.2);color:#fca5a5;border:1px solid rgba(239,68,68,.4)}
+
+/* ===== MW PROFILE HEADER ===== */
+.mw-profile{display:flex;align-items:center;gap:20px;margin-bottom:22px;flex-wrap:wrap}
+.mw-avatar{width:96px;height:96px;border-radius:50%;border:3px solid var(--mw);box-shadow:0 0 30px rgba(6,182,212,.5);object-fit:cover;background:#083344}
+.mw-avatar-fallback{width:96px;height:96px;border-radius:50%;border:3px solid var(--mw);box-shadow:0 0 30px rgba(6,182,212,.5);
+  display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-weight:900;color:var(--mw2);background:#083344}
+.mw-name{font-size:1.7rem;font-weight:800;color:#fff;line-height:1.2}
+.mw-sub{color:#94a3b8;font-size:.9rem;margin-top:4px;letter-spacing:1px}
+
+/* ===== RESULT BANNER (ban / action) ===== */
+.banner{display:none;margin-top:24px;padding:22px 26px;border-radius:16px;font-size:1rem;line-height:1.6;animation:fadeUp .4s ease both}
+.banner.show{display:block}
+.banner.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.4);color:#86efac}
+.banner.bad{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.4);color:#fca5a5}
+.banner .big{font-size:1.3rem;font-weight:800;display:block;margin-bottom:6px}
 
 /* ===== ARTICLE ===== */
 .article h3{color:#a855f7;font-size:1.15rem;margin:28px 0 10px;letter-spacing:.5px}
@@ -104,8 +155,8 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
   border-top:1px solid rgba(255,255,255,.05);letter-spacing:2px}
 
 /* ===== TOOLS LUA ===== */
-.tool-shot{width:100%;border-radius:12px;border:1px solid rgba(168,85,247,.4);margin:18px 0;
-  box-shadow:0 0 30px rgba(168,85,247,.25);display:block;background:#1a0a2e}
+.tool-shot{width:100%;border-radius:12px;border:1px solid rgba(34,197,94,.4);margin:18px 0;
+  box-shadow:0 0 30px rgba(34,197,94,.25);display:block;background:#052e16}
 .tool-desc{color:#cbd5e1;font-size:.92rem;line-height:1.8;text-align:center;margin-top:6px}
 .dl-wrap{text-align:center;margin-top:18px}
 .dl-btn{display:inline-block;background:linear-gradient(135deg,#22c55e,#06b6d4);color:#fff;font-weight:800;
@@ -113,10 +164,6 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
   transition:all .3s;box-shadow:0 0 25px rgba(34,197,94,.4);animation:pulse 2s ease-in-out infinite}
 .dl-btn:hover{transform:scale(1.07);box-shadow:0 0 40px rgba(34,197,94,.7);animation:none}
 .dl-note{display:block;margin-top:10px;font-size:.75rem;color:#64748b;letter-spacing:1px}
-.tool-badge{display:inline-block;background:rgba(168,85,247,.2);border:1px solid rgba(168,85,247,.5);
-  color:#c084fc;font-size:.75rem;font-weight:700;padding:4px 14px;border-radius:50px;letter-spacing:2px;margin-bottom:10px}
-#tools .card{text-align:center}
-#tools .desc{text-align:center}
 </style>
 </head>
 <body>
@@ -130,36 +177,106 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 <div class="header">
   <h1 class="big-title">DARK COMMUNITY</h1>
   <p class="subtitle">Shadow Never Sleeps</p>
+  <p class="tag">MINI WORLD · FREE FIRE · ROBLOX — TOOLS &amp; CHECKERS</p>
 </div>
 
 <div class="nav">
-  <button class="nav-btn" onclick="showSection('tools',this)">🛠️ Tools</button>
-  <button class="nav-btn active" onclick="showSection('checker',this)">🔍 Check Player By ID (FF)</button>
-  <button class="nav-btn" onclick="showSection('rbx',this)">🎲 Check Player By Usr (Roblox)</button>
-  <button class="nav-btn" onclick="showSection('article',this)">🌙 Bagaimana Komunitas DN2 Bangkit?</button>
+  <button class="nav-btn mw active" onclick="showSection('mwcheck',this)">🌍 Check Player</button>
+  <button class="nav-btn mw" onclick="showSection('mwroom',this)">🏠 Room Check</button>
+  <button class="nav-btn mw" onclick="showSection('mwban',this)">🚫 Ban Device</button>
+  <button class="nav-btn ff" onclick="showSection('checker',this)">🔥 Free Fire</button>
+  <button class="nav-btn rbx" onclick="showSection('rbx',this)">🎲 Roblox</button>
+  <button class="nav-btn tools" onclick="showSection('tools',this)">🛠️ Tools</button>
+  <button class="nav-btn art" onclick="showSection('article',this)">📖 DN2 Story</button>
 </div>
 
-<!-- ===== SECTION: TOOLS ===== -->
-<div id="tools" class="section">
-  <div class="card" style="max-width:580px;margin:0 auto;text-align:center">
-    <span class="tool-badge">TOOLS</span>
-    <h2>Tools Lua Mini World</h2>
-    <p class="desc">LuaExecV4 — editor &amp; executor Lua untuk Mini World: CREATA.</p>
+<!-- ===== SECTION: MINI WORLD CHECK PLAYER ===== -->
+<div id="mwcheck" class="section show">
+  <div class="card mw" style="max-width:720px;margin:0 auto">
+    <span class="kicker">MINI WORLD</span>
+    <h2>🌍 Check Player</h2>
+    <p class="desc">Masukkan UID Mini World untuk melihat nickname, avatar, negara, mood, dan bahasa akun.</p>
 
-    <div class="dl-wrap">
-      <a class="dl-btn" href="/dl/lua" target="_blank" rel="noopener" onclick="return dlLua(this)">⬇ DOWNLOAD</a>
-      <span class="dl-note">LuaByDax.zip — via MediaFire</span>
+    <div class="form-row">
+      <input type="text" id="mwUid" placeholder="Contoh: 1320454366" maxlength="12" onkeypress="if(event.key==='Enter')mwCheck()">
+      <button id="btnMwCheck" onclick="mwCheck()">CHECK</button>
+    </div>
+    <p class="hint">UID 8 digit otomatis jadi 10 digit (normalisasi sama seperti bot).</p>
+
+    <div id="mwLoading" class="loading">
+      <div class="spinner"></div>
+      <p>MENGAMBIL DATA DARI BAYANGAN MINI WORLD...</p>
     </div>
 
-    <img class="tool-shot" src="Screenshot%202026-09-25%20010104.png" alt="LuaExecV4 - By: Daxterr" onerror="this.style.display='none'">
-    <p class="tool-desc">LuaExeV4 dibuat oleh Daxterr untuk game Mini World yang bertujuan mempelajari Lua dalam game dan juga API yang bisa discan melalui LuaExeV4 menggunakan file-file yang sudah disediakan.</p>
+    <div id="mwError" class="error"></div>
+
+    <div id="mwResults" class="results">
+      <div class="mw-profile" id="mwProfile" style="display:none">
+        <img id="mwAvatar" class="mw-avatar" alt="Avatar" style="display:none">
+        <div id="mwAvatarFallback" class="mw-avatar-fallback" style="display:none">?</div>
+        <div>
+          <div class="mw-name" id="mwName">-</div>
+          <div class="mw-sub" id="mwSub">-</div>
+        </div>
+      </div>
+      <div class="res-grid" id="mwGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION: MINI WORLD ROOM CHECK ===== -->
+<div id="mwroom" class="section">
+  <div class="card mw" style="max-width:720px;margin:0 auto">
+    <span class="kicker">MINI WORLD</span>
+    <h2>🏠 Room &amp; Password Check</h2>
+    <p class="desc">Cek status player: sedang online, di dalam room apa, jumlah pemain, host, dan password room-nya.</p>
+
+    <div class="form-row">
+      <input type="text" id="mwRoomUid" placeholder="Contoh: 1320454366" maxlength="12" onkeypress="if(event.key==='Enter')mwRoom()">
+      <button id="btnMwRoom" onclick="mwRoom()">CHECK ROOM</button>
+    </div>
+
+    <div id="mwRoomLoading" class="loading">
+      <div class="spinner"></div>
+      <p>MEMERIKSA STATUS ROOM...</p>
+    </div>
+
+    <div id="mwRoomError" class="error"></div>
+
+    <div id="mwRoomResults" class="results">
+      <div class="res-grid" id="mwRoomGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION: MINI WORLD BAN DEVICE ===== -->
+<div id="mwban" class="section">
+  <div class="card danger" style="max-width:720px;margin:0 auto">
+    <span class="kicker danger">MINI WORLD · DANGER</span>
+    <h2>🚫 Ban Player Device</h2>
+    <p class="desc">Kirim request ban device ke UID target. Satu request mem-ban device selama <strong>~3 menit</strong>. Untuk durasi lebih lama, ulangi secara berkala (lihat bot Discord).</p>
+
+    <div class="form-row">
+      <input type="text" id="mwBanUid" placeholder="Contoh: 1320454366" maxlength="12" onkeypress="if(event.key==='Enter')mwBan()">
+      <button id="btnMwBan" class="danger" onclick="mwBan()">BAN DEVICE</button>
+    </div>
+    <p class="hint">⚠️ Klik sekali untuk menyiapkan, klik lagi untuk konfirmasi. Tindakan ini langsung dieksekusi.</p>
+
+    <div id="mwBanLoading" class="loading">
+      <div class="spinner"></div>
+      <p>MENGIRIM REQUEST BAN...</p>
+    </div>
+
+    <div id="mwBanError" class="error"></div>
+    <div id="mwBanResult" class="banner"></div>
   </div>
 </div>
 
 <!-- ===== SECTION: ROBLOX CHECKER ===== -->
 <div id="rbx" class="section">
-  <div class="card" style="max-width:700px;margin:0 auto">
-    <h2>Roblox Player Checker</h2>
+  <div class="card rbx" style="max-width:720px;margin:0 auto">
+    <span class="kicker rbx">ROBLOX</span>
+    <h2>🎲 Roblox Player Checker</h2>
     <p class="desc">Masukkan username Roblox untuk melihat profil lengkap — display name, ID, bio, teman, followers, badge, dan primary group.</p>
 
     <div class="form-row">
@@ -176,17 +293,18 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 
     <div id="rbxResults" class="results">
       <div id="rbxThumbWrap" style="text-align:center;margin-bottom:18px;display:none">
-        <img id="rbxThumb" alt="Avatar" style="width:120px;height:120px;border-radius:50%;border:3px solid #a855f7;box-shadow:0 0 25px rgba(168,85,247,.5);object-fit:cover">
+        <img id="rbxThumb" alt="Avatar" style="width:120px;height:120px;border-radius:50%;border:3px solid #ef4444;box-shadow:0 0 25px rgba(239,68,68,.5);object-fit:cover">
       </div>
       <div class="res-grid" id="rbxGrid"></div>
     </div>
   </div>
 </div>
 
-<!-- ===== SECTION: CHECKER ===== -->
-<div id="checker" class="section show">
-  <div class="card" style="max-width:700px;margin:0 auto">
-    <h2>Free Fire Player Checker</h2>
+<!-- ===== SECTION: FREE FIRE CHECKER ===== -->
+<div id="checker" class="section">
+  <div class="card ff" style="max-width:720px;margin:0 auto">
+    <span class="kicker ff">FREE FIRE</span>
+    <h2>🔥 Free Fire Player Checker</h2>
     <p class="desc">Masukkan ID pemain Free Fire (8-20 digit) untuk melihat profil, tanggal akun, rank, role, dan status online.</p>
 
     <div class="form-row">
@@ -207,9 +325,27 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
   </div>
 </div>
 
+<!-- ===== SECTION: TOOLS ===== -->
+<div id="tools" class="section">
+  <div class="card tools" style="max-width:580px;margin:0 auto;text-align:center">
+    <span class="kicker tools">TOOLS</span>
+    <h2 style="justify-content:center">🛠️ Tools Lua Mini World</h2>
+    <p class="desc">LuaExecV4 — editor &amp; executor Lua untuk Mini World: CREATA.</p>
+
+    <div class="dl-wrap">
+      <a class="dl-btn" href="/dl/lua" target="_blank" rel="noopener" onclick="return dlLua(this)">⬇ DOWNLOAD</a>
+      <span class="dl-note">LuaByDax.zip — via MediaFire</span>
+    </div>
+
+    <img class="tool-shot" src="Screenshot%202026-09-25%20010104.png" alt="LuaExecV4 - By: Daxterr" onerror="this.style.display='none'">
+    <p class="tool-desc">LuaExeV4 dibuat oleh Daxterr untuk game Mini World yang bertujuan mempelajari Lua dalam game dan juga API yang bisa discan melalui LuaExeV4 menggunakan file-file yang sudah disediakan.</p>
+  </div>
+</div>
+
 <!-- ===== SECTION: ARTICLE ===== -->
 <div id="article" class="section">
   <div class="card article">
+    <span class="kicker art">DN2 STORY</span>
     <h2>🌙 Bagaimana Komunitas DN2 Bangkit?</h2>
     <p class="desc">Kisah perjalanan Komunitas DN2 dari Sirkel NFA di Mini World: CREATA.</p>
 
@@ -284,6 +420,7 @@ function showSection(id,btn){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('show');
   btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 /* auto-download LuaByDax.zip via local proxy */
@@ -291,6 +428,178 @@ function dlLua(e){
   e.preventDefault();
   window.open('/dl/lua','_blank');
   return false;
+}
+
+/* ===== MINI WORLD SHARED ===== */
+const MW_CHECK='https://baseinfov1.daxterrantares.workers.dev/';
+const MW_ROOM='https://checkroompw.daxterrantares.workers.dev/';
+const MW_BAN='https://bandev.daxterrantares.workers.dev/';
+
+/* Same normalization as the WA/Discord bot: 8-digit -> 10, 9-digit -> 1+ */
+function mwFixUin(uin){
+  const s=String(uin==null?'':uin).replace(/\D/g,'');
+  if(!s) return null;
+  if(s.length===8) return '10'+s;
+  if(s.length===9) return '1'+s;
+  return s;
+}
+
+function mwErr(id,msg){
+  const ld=document.getElementById(id+'Loading'); if(ld) ld.classList.remove('show');
+  const res=document.getElementById(id+'Results'); if(res) res.classList.remove('show');
+  const e=document.getElementById(id+'Error');
+  e.textContent=msg;e.classList.add('show');
+}
+function mwCard(grid,label,value,sub,badge){
+  const d=document.createElement('div');
+  d.className='res-card';
+  d.innerHTML=`<div class="label">${label}</div><div class="value ${badge?'':'small'}">${value}</div>${sub?`<div class="sub">${sub}</div>`:''}`;
+  grid.appendChild(d);
+}
+
+/* ===== MINI WORLD CHECK PLAYER ===== */
+async function mwCheck(){
+  const uid=mwFixUin(document.getElementById('mwUid').value.trim());
+  if(!uid){mwErr('mw','Masukkan UID yang valid (8-10 digit angka).');return;}
+  document.getElementById('mwError').classList.remove('show');
+  document.getElementById('mwResults').classList.remove('show');
+  document.getElementById('mwLoading').classList.add('show');
+  document.getElementById('btnMwCheck').disabled=true;
+  try{
+    const r=await fetch(MW_CHECK+'?uid='+encodeURIComponent(uid));
+    const j=await r.json();
+    const entry=j && (j['1']||j[1]||(j[0]?j:null)||(Object.values(j)[0]));
+    const prof=entry && entry.profile;
+    document.getElementById('mwLoading').classList.remove('show');
+    if(!prof || (prof.uin==null && entry.uin==null)){mwErr('mw','Data tidak ditemukan untuk UID '+uid+'.');return;}
+
+    const role=prof.RoleInfo||{};
+    const nick=role.NickName||prof.NickName||'-';
+    const country=prof.country||(prof.show_country?'-':'-');
+    const mood=prof.mood_text||prof.mood_text_stat||'-';
+    const lang=prof.lang||'-';
+    let avatar=(prof.header&&prof.header.url)||null;
+    if(avatar) avatar=avatar.replace(/^http:/,'https:');
+
+    // Profile header (avatar + name)
+    const profWrap=document.getElementById('mwProfile');
+    const img=document.getElementById('mwAvatar');
+    const fb=document.getElementById('mwAvatarFallback');
+    if(avatar){
+      img.src=avatar;img.style.display='block';fb.style.display='none';
+      img.onerror=()=>{img.style.display='none';fb.style.display='flex';fb.textContent=nick.charAt(0).toUpperCase()||'?';};
+    }else{
+      img.style.display='none';fb.style.display='flex';fb.textContent=nick.charAt(0).toUpperCase()||'?';
+    }
+    document.getElementById('mwName').textContent=nick;
+    document.getElementById('mwSub').textContent='UID '+uid+' · Negara '+country;
+    profWrap.style.display='flex';
+
+    const g=document.getElementById('mwGrid');g.innerHTML='';
+    mwCard(g,'UID',String(prof.uin||entry.uin||uid));
+    mwCard(g,'Nickname',nick.replace(/[<>&]/g,''));
+    mwCard(g,'Country',country,'Kode negara akun');
+    mwCard(g,'Mood',mood.replace(/[<>&]/g,'')||'-');
+    mwCard(g,'Language',lang||'-');
+    mwCard(g,'Status','<span class="badge mw">AKUN VALID</span>','Ditemukan di database Mini World',true);
+
+    document.getElementById('mwResults').classList.add('show');
+  }catch(err){document.getElementById('mwLoading').classList.remove('show');mwErr('mw','Gagal mengambil data: '+err.message);}
+  document.getElementById('btnMwCheck').disabled=false;
+}
+
+/* ===== MINI WORLD ROOM CHECK ===== */
+async function mwRoom(){
+  const uid=mwFixUin(document.getElementById('mwRoomUid').value.trim());
+  if(!uid){mwErr('mwRoom','Masukkan UID yang valid (8-10 digit angka).');return;}
+  document.getElementById('mwRoomError').classList.remove('show');
+  document.getElementById('mwRoomResults').classList.remove('show');
+  document.getElementById('mwRoomLoading').classList.add('show');
+  document.getElementById('btnMwRoom').disabled=true;
+  try{
+    const r=await fetch(MW_ROOM+'?uid='+encodeURIComponent(uid));
+    const d=await r.json();
+    document.getElementById('mwRoomLoading').classList.remove('show');
+    if(d.error){mwErr('mwRoom',d.error);return;}
+
+    const g=document.getElementById('mwRoomGrid');g.innerHTML='';
+    // Online badge card
+    const oc=document.createElement('div');oc.className='res-card';
+    oc.innerHTML=`<div class="label">Status</div><div class="value"><span class="badge ${d.online?'on':'off'}">${d.online?'● ONLINE':'○ OFFLINE'}</span></div><div class="sub">${d.lastLogin?('Last login: '+d.lastLogin):''}</div>`;
+    g.appendChild(oc);
+    // In-room badge card
+    const rc=document.createElement('div');rc.className='res-card';
+    rc.innerHTML=`<div class="label">Di Dalam Room</div><div class="value"><span class="badge ${d.inRoom?'mw':'off'}">${d.inRoom?'✓ DI ROOM':'○ TIDAK'}</span></div>`;
+    g.appendChild(rc);
+
+    if(d.inRoom){
+      mwCard(g,'Room Name',String(d.roomName||'-').replace(/[<>&]/g,''));
+      mwCard(g,'Room ID',String(d.roomId||'-'));
+      mwCard(g,'Pemain',`${d.players!=null?d.players:'-'} / ${d.maxPlayers!=null?d.maxPlayers:'-'}`,d.isHost?'Host: YA':'Host: tidak');
+      mwCard(g,'Server',String(d.server||'-'),d.roomType?('Tipe: '+d.roomType):'');
+      // Password
+      const pc=document.createElement('div');pc.className='res-card';
+      if(d.hasPassword){
+        pc.innerHTML=`<div class="label">Password Room</div><div class="value"><span class="badge historic">${String(d.password||'').replace(/[<>&]/g,'')||'ADA'}</span></div><div class="sub">Room ini diproteksi password</div>`;
+      }else{
+        pc.innerHTML=`<div class="label">Password Room</div><div class="value"><span class="badge off">TIDAK ADA</span></div><div class="sub">Room terbuka</div>`;
+      }
+      g.appendChild(pc);
+    }else{
+      mwCard(g,'Room','<span class="badge off">SEDANG DI LUAR ROOM</span>','Player tidak sedang berada di room manapun',true);
+    }
+    document.getElementById('mwRoomResults').classList.add('show');
+  }catch(err){document.getElementById('mwRoomLoading').classList.remove('show');mwErr('mwRoom','Gagal mengambil data: '+err.message);}
+  document.getElementById('btnMwRoom').disabled=false;
+}
+
+/* ===== MINI WORLD BAN DEVICE (two-step confirm) ===== */
+let mwBanArmed=false,mwBanTimer=null;
+async function mwBan(){
+  const uid=mwFixUin(document.getElementById('mwBanUid').value.trim());
+  const btn=document.getElementById('btnMwBan');
+  if(!uid){mwErr('mwBan','Masukkan UID yang valid (8-10 digit angka).');return;}
+
+  // First click: arm. Second click: fire.
+  if(!mwBanArmed){
+    mwBanArmed=true;
+    btn.textContent='CONFIRM BAN?';
+    btn.classList.add('confirming');
+    clearTimeout(mwBanTimer);
+    mwBanTimer=setTimeout(()=>{
+      mwBanArmed=false;btn.textContent='BAN DEVICE';btn.classList.remove('confirming');
+    },4000);
+    return;
+  }
+  // Disarm + fire
+  mwBanArmed=false;clearTimeout(mwBanTimer);btn.textContent='BAN DEVICE';btn.classList.remove('confirming');
+
+  document.getElementById('mwBanError').classList.remove('show');
+  document.getElementById('mwBanResult').classList.remove('show','ok','bad');
+  document.getElementById('mwBanLoading').classList.add('show');
+  btn.disabled=true;
+  try{
+    const r=await fetch(MW_BAN+'?bandev='+encodeURIComponent(uid));
+    const t=(await r.text()).trim();
+    document.getElementById('mwBanLoading').classList.remove('show');
+    const res=document.getElementById('mwBanResult');
+    if(r.status===200 && /done/i.test(t)){
+      res.className='banner ok show';
+      res.innerHTML=`<span class="big">✅ BAN TERKIRIM</span>Device UID <strong>${uid}</strong> berhasil di-ban selama <strong>~3 menit</strong>.<br><span style="color:#86efac90">Balasan API: ${t.replace(/[<>&]/g,'')}</span>`;
+    }else if(r.status===404){
+      res.className='banner bad show';
+      res.innerHTML=`<span class="big">❌ DEVICE TIDAK DITEMUKAN</span>UID <strong>${uid}</strong> tidak ditemukan di database device.`;
+    }else{
+      let msg='';
+      try{msg=JSON.parse(t).error||'';}catch(_){}
+      res.className='banner bad show';
+      res.innerHTML=`<span class="big">❌ GAGAL</span>${msg.replace(/[<>&]/g,'')||('API mengembalikan HTTP '+r.status+'.')}`;
+    }
+  }catch(err){
+    document.getElementById('mwBanLoading').classList.remove('show');
+    mwErr('mwBan','Gagal mengirim request: '+err.message);
+  }
+  btn.disabled=false;
 }
 
 /* ===== ROBLOX CHECKER ===== */
@@ -334,7 +643,7 @@ async function checkRbx(){
     }else rbxCard(g,'Badges','None');
     if(d.profileUrl){
       const a=document.createElement('div');a.className='res-card';
-      a.innerHTML=`<div class="label">Profile</div><div class="value"><a href="${d.profileUrl}" target="_blank" rel="noopener" style="color:#a855f7">Buka di Roblox →</a></div>`;
+      a.innerHTML=`<div class="label">Profile</div><div class="value"><a href="${d.profileUrl}" target="_blank" rel="noopener" style="color:#ef4444">Buka di Roblox →</a></div>`;
       g.appendChild(a);
     }
     document.getElementById('rbxResults').classList.add('show');
@@ -476,8 +785,9 @@ async function cbOnline(pid){
 }
 async function retryPost(path,body,x,n){
   n=n||8;
+  let d;
   for(let i=0;i<n;i++){
-    const d=await post(path,body,x);
+    d=await post(path,body,x);
     if(d.state==='too_early'||d.state==='waiting'||d.state==='pending'){
       await new Promise(r=>setTimeout(r,Math.max(500,Math.min(15000,(d.retryAfter||2)*1000))));
       continue;
