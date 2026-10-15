@@ -223,7 +223,7 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
   <div class="card mw" style="max-width:720px;margin:0 auto">
     <span class="kicker">MINI WORLD</span>
     <h2>🌍 Check Player</h2>
-    <p class="desc">Enter a Mini World UID to see nickname, avatar, country, mood, and account language.</p>
+    <p class="desc">Enter a Mini World UID to see nickname, avatar, country, mood, account language, and device details (system, model, resolution, RAM).</p>
 
     <div class="form-row">
       <input type="text" id="mwUid" placeholder="e.g. 1320454366" maxlength="12" onkeypress="if(event.key==='Enter')mwCheck()">
@@ -503,6 +503,12 @@ function mwCard(grid,label,value,sub,badge){
   d.innerHTML=`<div class="label">${label}</div><div class="value ${badge?'':'small'}">${value}</div>${sub?`<div class="sub">${sub}</div>`:''}`;
   grid.appendChild(d);
 }
+/* RAM/storage formatter — ported from the bot's kb() in lib/format.js */
+function mwKb(v){
+  const n=Number(v);
+  if(!Number.isFinite(n))return '-';
+  return n>1048576?(n/1048576).toFixed(1)+' GB':Math.round(n/1024)+' MB';
+}
 
 /* ===== MINI WORLD CHECK PLAYER ===== */
 async function mwCheck(){
@@ -513,18 +519,24 @@ async function mwCheck(){
   document.getElementById('mwLoading').classList.add('show');
   document.getElementById('btnMwCheck').disabled=true;
   try{
-    const r=await fetch(MW_CHECK+'?uid='+encodeURIComponent(uid));
+    /* Single fetch to the profile/room-check API — returns profile + vip.extra (device). */
+    const r=await fetch(MW_PROFILE+encodeURIComponent(uid));
     const j=await r.json();
-    const entry=j && (j['1']||j[1]||(j[0]?j:null)||(Object.values(j)[0]));
-    const prof=entry && entry.profile;
     document.getElementById('mwLoading').classList.remove('show');
-    if(!prof || (prof.uin==null && entry.uin==null)){mwErr('mw','Data not found for UID '+uid+'.');return;}
+    if(String(j.code)!=='0'){mwErr('mw','API returned code='+j.code+(j.msg?(' / '+j.msg):''));return;}
 
-    const role=prof.RoleInfo||{};
+    /* profile (Lua-table string) — same parser as Room Check */
+    let prof=mwDeep(j.profile||'');
+    if(prof&&typeof prof==='object'&&'profile'in prof)prof=mwDeep(prof.profile);
+    if(!prof||typeof prof!=='object')prof={};
+    if(!Object.keys(prof).length){mwErr('mw','Data not found for UID '+uid+'.');return;}
+
+    const role=(prof.RoleInfo&&typeof prof.RoleInfo==='object')?prof.RoleInfo:{};
     const nick=role.NickName||prof.NickName||'-';
-    const country=prof.country||(prof.show_country?'-':'-');
+    const country=prof.country||'-';
     const mood=prof.mood_text||prof.mood_text_stat||'-';
     const lang=prof.lang||'-';
+    const uin=String(prof._k_||prof.uin||uid);
     let avatar=(prof.header&&prof.header.url)||null;
     if(avatar) avatar=avatar.replace(/^http:/,'https:');
 
@@ -539,16 +551,49 @@ async function mwCheck(){
       img.style.display='none';fb.style.display='flex';fb.textContent=nick.charAt(0).toUpperCase()||'?';
     }
     document.getElementById('mwName').textContent=nick;
-    document.getElementById('mwSub').textContent='UID '+uid+' · '+country;
+    document.getElementById('mwSub').textContent='UID '+uin+' · '+country;
     profWrap.style.display='flex';
 
     const g=document.getElementById('mwGrid');g.innerHTML='';
-    mwCard(g,'UID',String(prof.uin||entry.uin||uid));
-    mwCard(g,'Nickname',nick.replace(/[<>&]/g,''));
-    mwCard(g,'Country',country,'Account country code');
-    mwCard(g,'Mood',mood.replace(/[<>&]/g,'')||'-');
-    mwCard(g,'Language',lang||'-');
+    const esc=s=>String(s==null?'':s).replace(/[<>&]/g,'');
+
+    mwCard(g,'UID',uin);
+    mwCard(g,'Nickname',esc(nick));
+    mwCard(g,'Country',esc(country),'Account country code');
+    mwCard(g,'Mood',esc(mood)||'-');
+    mwCard(g,'Language',esc(lang)||'-');
     mwCard(g,'Status','<span class="badge mw">VALID ACCOUNT</span>','Found in the Mini World database',true);
+
+    /* ---- vip: object when healthy, "Too Many Requests" string when rate-limited ---- */
+    let vip=j.vip;
+    const rateLimited=mwVipRateLimited(vip);
+    if(typeof vip==='string'&&!rateLimited){vip=mwDeepJson(vip);if(typeof vip==='string')vip=mwDeep(vip);}
+    if(!vip||typeof vip!=='object')vip={};
+
+    /* ---- DEVICE (vip.extra + DeviceModel) — same fields as the bot's !check ---- */
+    const extra=(vip.extra&&typeof vip.extra==='object')?vip.extra:{};
+    let dm=extra.DeviceModel;
+    if(typeof dm==='string'){dm=mwDeepJson(dm);if(typeof dm==='string')dm=mwDeepJson(dm);}
+    if(!dm||typeof dm!=='object')dm={};
+    const hasDev=!!(extra.DeviceSystem||extra.DeviceID||extra.DeviceVender||dm.Model||dm.RamTotal);
+
+    if(rateLimited){
+      const dc=document.createElement('div');dc.className='res-card';
+      dc.innerHTML=`<div class="label">Device</div><div class="value"><span class="badge off">RATE LIMITED</span></div><div class="sub">Device info is temporarily rate-limited upstream — profile above is valid. Try again shortly.</div>`;
+      g.appendChild(dc);
+    }else if(hasDev){
+      mwCard(g,'Device System',esc(extra.DeviceSystem||'-'));
+      if(dm.Model)mwCard(g,'Device Model',esc(dm.Model));
+      if(dm.WindowWidth||dm.WindowHeigh)mwCard(g,'Resolution',esc((dm.WindowWidth||'?')+'x'+(dm.WindowHeigh||'?')),'Screen size');
+      if(dm.RamTotal||dm.SDTotal)mwCard(g,'RAM / Storage',esc(mwKb(dm.RamTotal)+' / '+mwKb(dm.SDTotal)));
+      if(extra.DeviceID)mwCard(g,'Device ID',esc(extra.DeviceID),'',true);
+      if(extra.DeviceVender)mwCard(g,'Vendor',esc(extra.DeviceVender));
+      if(extra.Country)mwCard(g,'Device Country',esc(extra.Country));
+    }else{
+      const dc=document.createElement('div');dc.className='res-card';
+      dc.innerHTML=`<div class="label">Device</div><div class="value"><span class="badge off">NOT AVAILABLE</span></div><div class="sub">No device data exposed for this account — device info appears only for active device sessions.</div>`;
+      g.appendChild(dc);
+    }
 
     document.getElementById('mwResults').classList.add('show');
   }catch(err){document.getElementById('mwLoading').classList.remove('show');mwErr('mw','Failed to fetch data: '+err.message);}
