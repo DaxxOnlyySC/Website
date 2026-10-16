@@ -290,7 +290,7 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
   <div class="card danger" style="max-width:720px;margin:0 auto">
     <span class="kicker danger">MINI WORLD · DANGER</span>
     <h2>🚫 Ban Player Device</h2>
-    <p class="desc">Send a device ban request to the target UID. Choose a duration — <strong>2 Hours</strong> / <strong>1 Day</strong> are automatically repeated every 3 minutes (same as the ban in the Discord bot).</p>
+    <p class="desc">Send a device ban request to the target UID. Choose a duration — <strong>2 Hours</strong> / <strong>1 Day</strong> are automatically repeated every 2 minutes (same as the ban in the Discord bot).</p>
 
     <div class="form-row">
       <input type="text" id="mwBanUid" placeholder="e.g. 1320454366" maxlength="12" onkeypress="if(event.key==='Enter')mwBan()">
@@ -299,8 +299,8 @@ body{background:#000;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;min-hei
 
     <div class="dur-options">
       <label class="dur-opt"><input type="radio" name="mwdur" value="180" checked><span>⚡ 3 Minutes<span class="loop-tag">Single shot</span></span></label>
-      <label class="dur-opt"><input type="radio" name="mwdur" value="7200"><span>🕒 2 Hours<span class="loop-tag">Repeats every 3 min</span></span></label>
-      <label class="dur-opt"><input type="radio" name="mwdur" value="86400"><span>📅 1 Day<span class="loop-tag">Repeats every 3 min</span></span></label>
+      <label class="dur-opt"><input type="radio" name="mwdur" value="7200"><span>🕒 2 Hours<span class="loop-tag">Repeats every 2 min</span></span></label>
+      <label class="dur-opt"><input type="radio" name="mwdur" value="86400"><span>📅 1 Day<span class="loop-tag">Repeats every 2 min</span></span></label>
     </div>
     <p class="hint">⚠️ Click BAN once to arm, click again to confirm. Loop durations (2 Hours / 1 Day) run while this tab stays open.</p>
 
@@ -760,7 +760,7 @@ async function mwRoom(){
 }
 
 /* ===== MINI WORLD BAN DEVICE (duration + 3-min loop, mirrors Discord bot) ===== */
-const MW_REPEAT_MS = 180000; // 3 minutes
+const MW_REPEAT_MS = 120000; // 2 minutes
 const MW_BANS_KEY = 'mw_active_bans';
 
 function loadBans(){ try{ return JSON.parse(localStorage.getItem(MW_BANS_KEY))||{}; }catch(_){ return {}; } }
@@ -820,7 +820,7 @@ async function mwBan(){
     putBan(uid,{until,nextAt:Date.now()+MW_REPEAT_MS,repeatMs:MW_REPEAT_MS});
     const human = durSec>=86400 ? (durSec/86400)+' day' : (durSec/3600)+' hours';
     res.className='banner ok show';
-    res.innerHTML=`<span class="big">✅ BAN LOOP STARTED</span>UID <strong>${uid}</strong> banned, repeating every <strong>3 minutes</strong> for <strong>${human}</strong>.<br><span style="color:#86efac90">Keep this tab open so the loop keeps running.</span>`;
+    res.innerHTML=`<span class="big">✅ BAN LOOP STARTED</span>UID <strong>${uid}</strong> banned, repeating every <strong>2 minutes</strong> for <strong>${human}</strong>.<br><span style="color:#86efac90">Keep this tab open so the loop keeps running.</span>`;
   }else{
     res.className='banner ok show';
     res.innerHTML=`<span class="big">✅ BAN SENT</span>Device UID <strong>${uid}</strong> banned for <strong>~3 minutes</strong> (single shot).<br><span style="color:#86efac90">API response: ${res0.text.replace(/[<>&]/g,'')}</span>`;
@@ -855,7 +855,7 @@ function renderActiveBans(){
     const remainMin=Math.max(0,Math.round((b.until-now)/60000));
     const nextSec=Math.max(0,Math.round((b.nextAt-now)/1000));
     const item=document.createElement('div');item.className='ab-item';
-    item.innerHTML=`<div><div class="ab-uid">${uid}</div><div class="ab-meta">${remainMin} min left · next fire in ${nextSec}s · repeats every 3 min</div></div>
+    item.innerHTML=`<div><div class="ab-uid">${uid}</div><div class="ab-meta">${remainMin} min left · next fire in ${nextSec}s · repeats every 2 min</div></div>
       <button class="ab-stop" onclick="stopBan('${uid}')">STOP</button>`;
     list.appendChild(item);
   }
